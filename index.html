@@ -366,6 +366,11 @@
       border-bottom: none;
     }
 
+    .history-info {
+      flex: 1;
+      min-width: 0;
+    }
+
     .item-title {
       font-weight: 600;
       font-size: 0.94rem;
@@ -377,10 +382,37 @@
       margin-top: 2px;
     }
 
+    .history-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .item-delta {
       font-weight: 800;
       font-size: 0.95rem;
       white-space: nowrap;
+    }
+
+    .btn-del-item {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+
+    .btn-del-item:hover {
+      background: #fee2e2;
     }
 
     .pos { color: #15803d; font-weight: 700; }
@@ -693,20 +725,54 @@
       container.innerHTML = state.history
         .slice(0, 20)
         .map(
-          (item) => `
+          (item, idx) => `
           <div class="history-item">
-            <div>
+            <div class="history-info">
               <div class="item-title">${item.title}</div>
               <div class="history-meta">${item.date}</div>
             </div>
-            <div class="item-delta ${item.delta >= 0 ? "pos" : "neg"}">
-              ${item.delta >= 0 ? "+" : ""}${fmtEUR(item.delta)}
+            <div class="history-right">
+              <div class="item-delta ${item.delta >= 0 ? "pos" : "neg"}">
+                ${item.delta >= 0 ? "+" : ""}${fmtEUR(item.delta)}
+              </div>
+              <button type="button" class="btn-del-item" data-idx="${idx}" title="Apagar este movimento">✕</button>
             </div>
           </div>
         `
         )
         .join("");
     }
+
+    document.getElementById("historyList").addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn-del-item");
+      if (!btn) return;
+
+      const idx = parseInt(btn.dataset.idx, 10);
+      const item = state.history[idx];
+      if (!item) return;
+
+      if (!confirm(`Queres apagar o movimento "${item.title}" (${fmtEUR(item.delta)})?`)) {
+        return;
+      }
+
+      // Verifica se o movimento tem os dados dos cofres associados para poder reverter o saldo
+      const hasDetails = item.parts || item.coffer;
+      if (hasDetails && confirm("Queres também reverter este valor nos saldos dos cofres?")) {
+        if (item.parts) {
+          // Era uma entrada: subtrai o que tinha sido distribuído
+          ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+            state.balances[k] = Math.max(0, Number((state.balances[k] - (item.parts[k] || 0)).toFixed(2)));
+          });
+        } else if (item.coffer) {
+          // Era uma saída: devolve o valor retirado ao cofre
+          state.balances[item.coffer] = Number((state.balances[item.coffer] + Math.abs(item.delta)).toFixed(2));
+        }
+      }
+
+      state.history.splice(idx, 1);
+      saveState();
+      renderAll();
+    });
 
     document.querySelectorAll(".type-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -755,7 +821,8 @@
       state.history.unshift({
         title: `Entrada (${state.mode === "mesada" ? "Mesada" : "Presente"})`,
         date: now,
-        delta: amount
+        delta: amount,
+        parts: parts
       });
 
       document.getElementById("amountInput").value = "";
@@ -791,7 +858,8 @@
       state.history.unshift({
         title: note ? `${cofferNames[coffer]}: ${note}` : `Saída (${cofferNames[coffer]})`,
         date: now,
-        delta: -amount
+        delta: -amount,
+        coffer: coffer
       });
 
       document.getElementById("spendAmount").value = "";
@@ -844,7 +912,7 @@
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         const swCode = `
-          const CACHE_NAME = "quatro-cofres-v2";
+          const CACHE_NAME = "quatro-cofres-v3";
           self.addEventListener("install", (e) => {
             e.waitUntil(
               caches.open(CACHE_NAME).then((cache) => cache.addAll(["./", "./index.html"]))
