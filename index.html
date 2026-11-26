@@ -35,7 +35,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     body {
@@ -237,6 +237,32 @@
       background: var(--primary-hover);
     }
 
+    .btn-secondary {
+      width: 100%;
+      background: #eef2ff;
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-danger-outline {
+      width: 100%;
+      background: #fff;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 11px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
     .coffers-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -295,40 +321,6 @@
       }
     }
 
-    .btn-secondary {
-      width: 100%;
-      background: #0f172a;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.9rem;
-    }
-
-    .history-item:last-child {
-      border-bottom: none;
-    }
-
-    .history-meta {
-      color: var(--muted);
-      font-size: 0.78rem;
-      margin-top: 2px;
-    }
-
-    .pos { color: #15803d; font-weight: 700; }
-    .neg { color: #b91c1c; font-weight: 700; }
-
     .config-panel {
       display: none;
       background: #f8fafc;
@@ -361,35 +353,57 @@
       margin-top: 8px;
     }
 
-    .btn-danger-outline {
-      margin-top: 12px;
-      background: #fff;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
     }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-title {
+      font-weight: 600;
+      font-size: 0.94rem;
+    }
+
+    .history-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .item-delta {
+      font-weight: 800;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .pos { color: #15803d; font-weight: 700; }
+    .neg { color: #b91c1c; font-weight: 700; }
   </style>
 </head>
 <body>
+
   <div class="header">
     <div class="header-top">
       <div>
         <div class="app-title">Os Meus 4 Cofres</div>
-        <div class="app-sub">Aprender a poupar, investir e realizar sonhos</div>
+        <div class="app-sub">Aprender a construir o meu futuro e realizar sonhos</div>
       </div>
-      <button class="btn-config" id="toggleConfigBtn" type="button">Definições</button>
+      <button type="button" class="btn-config" id="toggleConfigBtn">Definições</button>
     </div>
 
     <div class="total-box">
       <div>
-        <div class="total-label">Total nos 4 cofres</div>
+        <div class="total-label">Total nos 4 Cofres</div>
         <div class="total-value" id="totalBalance">0,00 €</div>
       </div>
-      <div style="text-align: right; font-size: 0.82rem; opacity: 0.92;">
+      <div style="text-align: right; font-size: 0.82rem;">
         Modo ativo:<br />
         <strong id="activeModeLabel">Mesada</strong>
       </div>
@@ -397,11 +411,11 @@
 
     <div class="config-panel" id="configPanel">
       <div style="color: var(--text); font-weight: 700; margin-bottom: 8px;">
-        Percentagens — Mesada (têm de somar 100%)
+        Percentagens – Mesada (têm de somar 100%)
       </div>
       <div class="pct-grid">
         <div>
-          <label>Poupar/Inv.</label>
+          <label>O Meu Futuro</label>
           <input type="number" id="mesada_poupar" min="0" max="100" />
         </div>
         <div>
@@ -413,17 +427,17 @@
           <input type="number" id="mesada_liberdade" min="0" max="100" />
         </div>
         <div>
-          <label>Doação</label>
+          <label>Solidariedade</label>
           <input type="number" id="mesada_doacao" min="0" max="100" />
         </div>
       </div>
 
-      <div style="color: var(--text); font-weight: 700; margin-bottom: 8px; margin-top: 10px;">
-        Percentagens — Presente (têm de somar 100%)
+      <div style="color: var(--text); font-weight: 700; margin: 10px 0 8px;">
+        Percentagens – Presente (têm de somar 100%)
       </div>
       <div class="pct-grid">
         <div>
-          <label>Poupar/Inv.</label>
+          <label>O Meu Futuro</label>
           <input type="number" id="presente_poupar" min="0" max="100" />
         </div>
         <div>
@@ -435,19 +449,19 @@
           <input type="number" id="presente_liberdade" min="0" max="100" />
         </div>
         <div>
-          <label>Doação</label>
+          <label>Solidariedade</label>
           <input type="number" id="presente_doacao" min="0" max="100" />
         </div>
       </div>
 
-      <button class="btn-secondary" id="saveRulesBtn" type="button">Guardar percentagens</button>
+      <button type="button" class="btn-secondary" id="saveRulesBtn">Guardar regras</button>
       <div class="small-note" id="rulesStatus"></div>
-      <button class="btn-danger-outline" id="resetAllBtn" type="button">Repor saldos e histórico a zero</button>
+      <button type="button" class="btn-danger-outline" id="resetAllBtn">Repor tudo a zero</button>
     </div>
   </div>
 
   <div class="card">
-    <div class="step-badge">Passo 1 • Dividir dinheiro recebido</div>
+    <span class="step-badge">Passo 1 • Dividir dinheiro recebido</span>
     <h2>Quanto dinheiro recebeste hoje?</h2>
 
     <div class="type-grid">
@@ -473,7 +487,7 @@
 
   <div class="coffers-grid">
     <div class="coffer-card">
-      <span class="coffer-tag tag-poupar">Poupar / Investir</span>
+      <span class="coffer-tag tag-poupar">O Meu Futuro</span>
       <div class="coffer-balance" id="bal-poupar">0,00 €</div>
       <div class="coffer-rule" id="rule-poupar">Mesada: 40% • Presente: 50%</div>
     </div>
@@ -487,19 +501,19 @@
     <div class="coffer-card">
       <span class="coffer-tag tag-liberdade">Liberdade (Pequeno Brinquedo)</span>
       <div class="coffer-balance" id="bal-liberdade">0,00 €</div>
-      <div class="coffer-rule" id="rule-liberdade">Mesada: 20% • Presente: 15%</div>
+      <div class="coffer-rule" id="rule-liberdade">Mesada: 20% • Presente: 10%</div>
     </div>
 
     <div class="coffer-card">
-      <span class="coffer-tag tag-doacao">Doação</span>
+      <span class="coffer-tag tag-doacao">Solidariedade</span>
       <div class="coffer-balance" id="bal-doacao">0,00 €</div>
-      <div class="coffer-rule" id="rule-doacao">Mesada: 10% • Presente: 5%</div>
+      <div class="coffer-rule" id="rule-doacao">Mesada: 10% • Presente: 10%</div>
     </div>
   </div>
 
   <div class="card">
-    <div class="step-badge">Passo 2 • Usar ou retirar de um cofre</div>
-    <h2>Registar compra, objetivo ou doação</h2>
+    <span class="step-badge">Passo 2 • Usar ou retirar dinheiro</span>
+    <h2>Registar compra, objetivo ou solidariedade</h2>
 
     <div class="spend-row">
       <div>
@@ -507,19 +521,19 @@
         <select id="spendCoffer">
           <option value="liberdade">Liberdade (Pequeno Brinquedo)</option>
           <option value="sonhos">Sonhos (Grande Brinquedo)</option>
-          <option value="doacao">Doação</option>
-          <option value="poupar">Poupar / Investir</option>
+          <option value="doacao">Solidariedade</option>
+          <option value="poupar">O Meu Futuro</option>
         </select>
       </div>
       <div>
         <label for="spendAmount">Valor a retirar (€)</label>
-        <input type="number" id="spendAmount" step="0.01" min="0.01" placeholder="0,00" />
+        <input type="number" id="spendAmount" step="0.01" min="0" placeholder="0,00" />
       </div>
     </div>
 
     <div style="margin-bottom: 12px;">
       <label for="spendNote">O que foi? (opcional)</label>
-      <input type="text" id="spendNote" placeholder="Ex.: Livro, jogo, ajuda..." />
+      <input type="text" id="spendNote" placeholder="Ex: Livro, brinquedo, ajuda solidária..." />
     </div>
 
     <button type="button" class="btn-secondary" id="spendBtn">Retirar do cofre</button>
@@ -546,7 +560,7 @@
       },
       rules: {
         mesada: { poupar: 40, sonhos: 30, liberdade: 20, doacao: 10 },
-        presente: { poupar: 50, sonhos: 30, liberdade: 15, doacao: 5 }
+        presente: { poupar: 50, sonhos: 30, liberdade: 10, doacao: 10 }
       },
       history: []
     };
@@ -611,10 +625,10 @@
     }
 
     const cofferNames = {
-      poupar: "Poupar / Investir",
+      poupar: "O Meu Futuro",
       sonhos: "Sonhos (Grande Brinquedo)",
       liberdade: "Liberdade (Pequeno Brinquedo)",
-      doacao: "Doação"
+      doacao: "Solidariedade"
     };
 
     function renderAll() {
@@ -662,10 +676,10 @@
       const parts = splitAmount(amount, pcts);
 
       document.getElementById("distributionPreview").innerHTML = `
-        <div class="preview-item"><span>Poupar / Investir (${pcts.poupar}%)</span><strong>${fmtEUR(parts.poupar)}</strong></div>
+        <div class="preview-item"><span>O Meu Futuro (${pcts.poupar}%)</span><strong>${fmtEUR(parts.poupar)}</strong></div>
         <div class="preview-item"><span>Sonhos (${pcts.sonhos}%)</span><strong>${fmtEUR(parts.sonhos)}</strong></div>
         <div class="preview-item"><span>Liberdade (${pcts.liberdade}%)</span><strong>${fmtEUR(parts.liberdade)}</strong></div>
-        <div class="preview-item"><span>Doação (${pcts.doacao}%)</span><strong>${fmtEUR(parts.doacao)}</strong></div>
+        <div class="preview-item"><span>Solidariedade (${pcts.doacao}%)</span><strong>${fmtEUR(parts.doacao)}</strong></div>
       `;
     }
 
@@ -682,10 +696,10 @@
           (item) => `
           <div class="history-item">
             <div>
-              <div>${item.title}</div>
+              <div class="item-title">${item.title}</div>
               <div class="history-meta">${item.date}</div>
             </div>
-            <div class="${item.delta >= 0 ? "pos" : "neg"}">
+            <div class="item-delta ${item.delta >= 0 ? "pos" : "neg"}">
               ${item.delta >= 0 ? "+" : ""}${fmtEUR(item.delta)}
             </div>
           </div>
@@ -721,7 +735,7 @@
     document.getElementById("distributeBtn").addEventListener("click", () => {
       const amount = parseFloat(document.getElementById("amountInput").value);
       if (!Number.isFinite(amount) || amount <= 0) {
-        alert("Escreve primeiro um valor maior do que 0,00 €.");
+        alert("Escreve primeiro um valor maior que 0 €.");
         return;
       }
 
@@ -739,7 +753,7 @@
       });
 
       state.history.unshift({
-        title: `${state.mode === "mesada" ? "Mesada" : "Presente"} dividido pelos 4 cofres`,
+        title: `Entrada (${state.mode === "mesada" ? "Mesada" : "Presente"})`,
         date: now,
         delta: amount
       });
@@ -756,16 +770,16 @@
       const statusEl = document.getElementById("spendStatus");
 
       if (!Number.isFinite(amount) || amount <= 0) {
-        statusEl.textContent = "Indica um valor válido para retirar.";
+        statusEl.textContent = "Indica um valor válido maior que 0 €.";
         return;
       }
 
-      if (amount > state.balances[coffer] + 0.0001) {
-        statusEl.textContent = `Saldo insuficiente no cofre ${cofferNames[coffer]} (${fmtEUR(state.balances[coffer])}).`;
+      if (amount > state.balances[coffer]) {
+        statusEl.textContent = "Saldo insuficiente nesse cofre.";
         return;
       }
 
-      state.balances[coffer] = Number(Math.max(0, state.balances[coffer] - amount).toFixed(2));
+      state.balances[coffer] = Number((state.balances[coffer] - amount).toFixed(2));
       const now = new Date().toLocaleString("pt-PT", {
         day: "2-digit",
         month: "2-digit",
@@ -775,14 +789,14 @@
       });
 
       state.history.unshift({
-        title: note ? `${cofferNames[coffer]} — ${note}` : `Retirado de ${cofferNames[coffer]}`,
+        title: note ? `${cofferNames[coffer]}: ${note}` : `Saída (${cofferNames[coffer]})`,
         date: now,
         delta: -amount
       });
 
       document.getElementById("spendAmount").value = "";
       document.getElementById("spendNote").value = "";
-      statusEl.textContent = "Movimento registado.";
+      statusEl.textContent = "Movimento registado com sucesso!";
       saveState();
       renderAll();
     });
@@ -807,7 +821,7 @@
           sum += val;
         }
         if (sum !== 100) {
-          statusEl.textContent = `As percentagens de ${mode === "mesada" ? "Mesada" : "Presente"} somam ${sum}% (têm de somar 100%).`;
+          statusEl.textContent = `As percentagens de "${mode}" têm de somar 100% (atualmente somam ${sum}%).`;
           return;
         }
       }
@@ -815,11 +829,11 @@
       state.rules = nextRules;
       saveState();
       renderAll();
-      statusEl.textContent = "Percentagens guardadas com sucesso.";
+      statusEl.textContent = "Percentagens guardadas com sucesso!";
     });
 
     document.getElementById("resetAllBtn").addEventListener("click", () => {
-      if (!confirm("Tens a certeza de que queres repor todos os saldos e o histórico a zero?")) return;
+      if (!confirm("Tens a certeza de que queres apagar todos os saldos e movimentos?")) return;
       const keepRules = state.rules;
       state = structuredClone(DEFAULT_STATE);
       state.rules = keepRules;
@@ -830,10 +844,10 @@
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         const swCode = `
-          const CACHE_NAME = "quatro-cofres-v1";
+          const CACHE_NAME = "quatro-cofres-v2";
           self.addEventListener("install", (e) => {
             e.waitUntil(
-              caches.open(CACHE_NAME).then((cache) => cache.addAll(["./", "./index.html", "./manifest.json", "./icon.svg"]))
+              caches.open(CACHE_NAME).then((cache) => cache.addAll(["./", "./index.html"]))
             );
             self.skipWaiting();
           });
