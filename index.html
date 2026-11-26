@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Os Meus 4 Cofres</title>
+
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="4 Cofres" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --poupar-bg: #eef2ff;
+      --poupar-fg: #3730a3;
+      --sonhos-bg: #fef3c7;
+      --sonhos-fg: #92400e;
+      --liberdade-bg: #dcfce7;
+      --liberdade-fg: #166534;
+      --doacao-bg: #fce7f3;
+      --doacao-fg: #9d174d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      padding-bottom: 48px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px -10px rgba(79, 70, 229, 0.5);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .app-sub {
+      font-size: 0.9rem;
+      opacity: 0.92;
+      margin-top: 4px;
+    }
+
+    .total-box {
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.9;
+    }
+
+    .total-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+    }
+
+    .btn-config {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      background: #eef2ff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .type-btn {
+      border: 2px solid var(--border);
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .type-btn.active {
+      border-color: var(--primary);
+      background: #eef2ff;
+      color: var(--primary);
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .quick-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      margin-bottom: 14px;
+    }
+
+    .chip-btn {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .preview-list {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 0.92rem;
+    }
+
+    .preview-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .preview-item:last-child {
+      border-bottom: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .coffers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 520px) {
+      .coffers-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .coffer-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .coffer-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .tag-poupar { background: var(--poupar-bg); color: var(--poupar-fg); }
+    .tag-sonhos { background: var(--sonhos-bg); color: var(--sonhos-fg); }
+    .tag-liberdade { background: var(--liberdade-bg); color: var(--liberdade-fg); }
+    .tag-doacao { background: var(--doacao-bg); color: var(--doacao-fg); }
+
+    .coffer-balance {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .coffer-rule {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .spend-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .spend-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-secondary {
+      width: 100%;
+      background: #0f172a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-meta {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+
+    .pos { color: #15803d; font-weight: 700; }
+    .neg { color: #b91c1c; font-weight: 700; }
+
+    .config-panel {
+      display: none;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .config-panel.open {
+      display: block;
+    }
+
+    .pct-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 520px) {
+      .pct-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .small-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .btn-danger-outline {
+      margin-top: 12px;
+      background: #fff;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="app-title">Os Meus 4 Cofres</div>
+        <div class="app-sub">Aprender a poupar, investir e realizar sonhos</div>
+      </div>
+      <button class="btn-config" id="toggleConfigBtn" type="button">Definições</button>
+    </div>
+
+    <div class="total-box">
+      <div>
+        <div class="total-label">Total nos 4 cofres</div>
+        <div class="total-value" id="totalBalance">0,00 €</div>
+      </div>
+      <div style="text-align: right; font-size: 0.82rem; opacity: 0.92;">
+        Modo ativo:<br />
+        <strong id="activeModeLabel">Mesada</strong>
+      </div>
+    </div>
+
+    <div class="config-panel" id="configPanel">
+      <div style="color: var(--text); font-weight: 700; margin-bottom: 8px;">
+        Percentagens — Mesada (têm de somar 100%)
+      </div>
+      <div class="pct-grid">
+        <div>
+          <label>Poupar/Inv.</label>
+          <input type="number" id="mesada_poupar" min="0" max="100" />
+        </div>
+        <div>
+          <label>Sonhos</label>
+          <input type="number" id="mesada_sonhos" min="0" max="100" />
+        </div>
+        <div>
+          <label>Liberdade</label>
+          <input type="number" id="mesada_liberdade" min="0" max="100" />
+        </div>
+        <div>
+          <label>Doação</label>
+          <input type="number" id="mesada_doacao" min="0" max="100" />
+        </div>
+      </div>
+
+      <div style="color: var(--text); font-weight: 700; margin-bottom: 8px; margin-top: 10px;">
+        Percentagens — Presente (têm de somar 100%)
+      </div>
+      <div class="pct-grid">
+        <div>
+          <label>Poupar/Inv.</label>
+          <input type="number" id="presente_poupar" min="0" max="100" />
+        </div>
+        <div>
+          <label>Sonhos</label>
+          <input type="number" id="presente_sonhos" min="0" max="100" />
+        </div>
+        <div>
+          <label>Liberdade</label>
+          <input type="number" id="presente_liberdade" min="0" max="100" />
+        </div>
+        <div>
+          <label>Doação</label>
+          <input type="number" id="presente_doacao" min="0" max="100" />
+        </div>
+      </div>
+
+      <button class="btn-secondary" id="saveRulesBtn" type="button">Guardar percentagens</button>
+      <div class="small-note" id="rulesStatus"></div>
+      <button class="btn-danger-outline" id="resetAllBtn" type="button">Repor saldos e histórico a zero</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step-badge">Passo 1 • Dividir dinheiro recebido</div>
+    <h2>Quanto dinheiro recebeste hoje?</h2>
+
+    <div class="type-grid">
+      <button type="button" class="type-btn active" data-type="mesada">Mesada</button>
+      <button type="button" class="type-btn" data-type="presente">Presente</button>
+    </div>
+
+    <label for="amountInput">Valor em Euros (€)</label>
+    <input type="number" id="amountInput" step="0.01" min="0" placeholder="0,00" />
+
+    <div class="quick-row">
+      <button type="button" class="chip-btn" data-add="5">+5 €</button>
+      <button type="button" class="chip-btn" data-add="10">+10 €</button>
+      <button type="button" class="chip-btn" data-add="20">+20 €</button>
+      <button type="button" class="chip-btn" data-add="50">+50 €</button>
+      <button type="button" class="chip-btn" id="clearAmountBtn">Limpar</button>
+    </div>
+
+    <div class="preview-list" id="distributionPreview"></div>
+
+    <button type="button" class="btn-primary" id="distributeBtn">Colocar nos 4 cofres</button>
+  </div>
+
+  <div class="coffers-grid">
+    <div class="coffer-card">
+      <span class="coffer-tag tag-poupar">Poupar / Investir</span>
+      <div class="coffer-balance" id="bal-poupar">0,00 €</div>
+      <div class="coffer-rule" id="rule-poupar">Mesada: 40% • Presente: 50%</div>
+    </div>
+
+    <div class="coffer-card">
+      <span class="coffer-tag tag-sonhos">Sonhos (Grande Brinquedo)</span>
+      <div class="coffer-balance" id="bal-sonhos">0,00 €</div>
+      <div class="coffer-rule" id="rule-sonhos">Mesada: 30% • Presente: 30%</div>
+    </div>
+
+    <div class="coffer-card">
+      <span class="coffer-tag tag-liberdade">Liberdade (Pequeno Brinquedo)</span>
+      <div class="coffer-balance" id="bal-liberdade">0,00 €</div>
+      <div class="coffer-rule" id="rule-liberdade">Mesada: 20% • Presente: 15%</div>
+    </div>
+
+    <div class="coffer-card">
+      <span class="coffer-tag tag-doacao">Doação</span>
+      <div class="coffer-balance" id="bal-doacao">0,00 €</div>
+      <div class="coffer-rule" id="rule-doacao">Mesada: 10% • Presente: 5%</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step-badge">Passo 2 • Usar ou retirar de um cofre</div>
+    <h2>Registar compra, objetivo ou doação</h2>
+
+    <div class="spend-row">
+      <div>
+        <label for="spendCoffer">Cofre</label>
+        <select id="spendCoffer">
+          <option value="liberdade">Liberdade (Pequeno Brinquedo)</option>
+          <option value="sonhos">Sonhos (Grande Brinquedo)</option>
+          <option value="doacao">Doação</option>
+          <option value="poupar">Poupar / Investir</option>
+        </select>
+      </div>
+      <div>
+        <label for="spendAmount">Valor a retirar (€)</label>
+        <input type="number" id="spendAmount" step="0.01" min="0.01" placeholder="0,00" />
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+      <label for="spendNote">O que foi? (opcional)</label>
+      <input type="text" id="spendNote" placeholder="Ex.: Livro, jogo, ajuda..." />
+    </div>
+
+    <button type="button" class="btn-secondary" id="spendBtn">Retirar do cofre</button>
+    <div class="small-note" id="spendStatus"></div>
+  </div>
+
+  <div class="card">
+    <h2>Últimos movimentos</h2>
+    <div id="historyList">
+      <div class="small-note">Ainda não existem movimentos registados.</div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "os_meus_4_cofres_state_v1";
+
+    const DEFAULT_STATE = {
+      mode: "mesada",
+      balances: {
+        poupar: 0,
+        sonhos: 0,
+        liberdade: 0,
+        doacao: 0
+      },
+      rules: {
+        mesada: { poupar: 40, sonhos: 30, liberdade: 20, doacao: 10 },
+        presente: { poupar: 50, sonhos: 30, liberdade: 15, doacao: 5 }
+      },
+      history: []
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DEFAULT_STATE);
+        const parsed = JSON.parse(raw);
+        return {
+          mode: parsed.mode === "presente" ? "presente" : "mesada",
+          balances: { ...DEFAULT_STATE.balances, ...(parsed.balances || {}) },
+          rules: {
+            mesada: { ...DEFAULT_STATE.rules.mesada, ...(parsed.rules?.mesada || {}) },
+            presente: { ...DEFAULT_STATE.rules.presente, ...(parsed.rules?.presente || {}) }
+          },
+          history: Array.isArray(parsed.history) ? parsed.history : []
+        };
+      } catch {
+        return structuredClone(DEFAULT_STATE);
+      }
+    }
+
+    let state = loadState();
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function fmtEUR(val) {
+      return Number(val || 0).toLocaleString("pt-PT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + " €";
+    }
+
+    function splitAmount(total, pcts) {
+      const cents = Math.round(total * 100);
+      const keys = ["poupar", "sonhos", "liberdade", "doacao"];
+      const raw = keys.map((k) => ({
+        key: k,
+        exact: (cents * pcts[k]) / 100,
+        floor: Math.floor((cents * pcts[k]) / 100)
+      }));
+
+      let remainder = cents - raw.reduce((acc, item) => acc + item.floor, 0);
+      raw
+        .slice()
+        .sort((a, b) => (b.exact - b.floor) - (a.exact - a.floor))
+        .forEach((item) => {
+          if (remainder > 0) {
+            item.floor += 1;
+            remainder -= 1;
+          }
+        });
+
+      const result = {};
+      raw.forEach((item) => {
+        result[item.key] = item.floor / 100;
+      });
+      return result;
+    }
+
+    const cofferNames = {
+      poupar: "Poupar / Investir",
+      sonhos: "Sonhos (Grande Brinquedo)",
+      liberdade: "Liberdade (Pequeno Brinquedo)",
+      doacao: "Doação"
+    };
+
+    function renderAll() {
+      const total =
+        state.balances.poupar +
+        state.balances.sonhos +
+        state.balances.liberdade +
+        state.balances.doacao;
+
+      document.getElementById("totalBalance").textContent = fmtEUR(total);
