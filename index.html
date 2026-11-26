@@ -625,3 +625,92 @@
         state.balances.doacao;
 
       document.getElementById("totalBalance").textContent = fmtEUR(total);
+      document.getElementById("activeModeLabel").textContent =
+        state.mode === "mesada" ? "Mesada" : "Presente";
+
+      document.querySelectorAll(".type-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.type === state.mode);
+      });
+
+      document.getElementById("bal-poupar").textContent = fmtEUR(state.balances.poupar);
+      document.getElementById("bal-sonhos").textContent = fmtEUR(state.balances.sonhos);
+      document.getElementById("bal-liberdade").textContent = fmtEUR(state.balances.liberdade);
+      document.getElementById("bal-doacao").textContent = fmtEUR(state.balances.doacao);
+
+      ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+        document.getElementById(`rule-${k}`).textContent =
+          `Mesada: ${state.rules.mesada[k]}% • Presente: ${state.rules.presente[k]}%`;
+      });
+
+      syncConfigInputs();
+      renderPreview();
+      renderHistory();
+    }
+
+    function syncConfigInputs() {
+      ["mesada", "presente"].forEach((mode) => {
+        ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+          document.getElementById(`${mode}_${k}`).value = state.rules[mode][k];
+        });
+      });
+    }
+
+    function renderPreview() {
+      const rawVal = parseFloat(document.getElementById("amountInput").value);
+      const amount = Number.isFinite(rawVal) && rawVal > 0 ? rawVal : 0;
+      const pcts = state.rules[state.mode];
+      const parts = splitAmount(amount, pcts);
+
+      document.getElementById("distributionPreview").innerHTML = `
+        <div class="preview-item"><span>Poupar / Investir (${pcts.poupar}%)</span><strong>${fmtEUR(parts.poupar)}</strong></div>
+        <div class="preview-item"><span>Sonhos (${pcts.sonhos}%)</span><strong>${fmtEUR(parts.sonhos)}</strong></div>
+        <div class="preview-item"><span>Liberdade (${pcts.liberdade}%)</span><strong>${fmtEUR(parts.liberdade)}</strong></div>
+        <div class="preview-item"><span>Doação (${pcts.doacao}%)</span><strong>${fmtEUR(parts.doacao)}</strong></div>
+      `;
+    }
+
+    function renderHistory() {
+      const container = document.getElementById("historyList");
+      if (!state.history.length) {
+        container.innerHTML = `<div class="small-note">Ainda não existem movimentos registados.</div>`;
+        return;
+      }
+
+      container.innerHTML = state.history
+        .slice(0, 20)
+        .map(
+          (item) => `
+          <div class="history-item">
+            <div>
+              <div>${item.title}</div>
+              <div class="history-meta">${item.date}</div>
+            </div>
+            <div class="${item.delta >= 0 ? "pos" : "neg"}">
+              ${item.delta >= 0 ? "+" : ""}${fmtEUR(item.delta)}
+            </div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    document.querySelectorAll(".type-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.mode = btn.dataset.type;
+        saveState();
+        renderAll();
+      });
+    });
+
+    document.getElementById("amountInput").addEventListener("input", renderPreview);
+
+    document.querySelectorAll(".chip-btn[data-add]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const current = parseFloat(document.getElementById("amountInput").value) || 0;
+        const next = current + parseFloat(btn.dataset.add);
+        document.getElementById("amountInput").value = next.toFixed(2);
+        renderPreview();
+      });
+    });
+
+    do
