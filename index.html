@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Os Meus 4 Cofres</title>
+  <title>Cofre Mágico</title>
 
   <meta name="theme-color" content="#4f46e5" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="4 Cofres" />
+  <meta name="apple-mobile-web-app-title" content="Cofre Mágico" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
 
@@ -23,12 +23,16 @@
       --primary-hover: #4338ca;
       --poupar-bg: #eef2ff;
       --poupar-fg: #3730a3;
+      --poupar-color: #4f46e5;
       --sonhos-bg: #fef3c7;
       --sonhos-fg: #92400e;
+      --sonhos-color: #d97706;
       --liberdade-bg: #dcfce7;
       --liberdade-fg: #166534;
+      --liberdade-color: #16a34a;
       --doacao-bg: #fce7f3;
       --doacao-fg: #9d174d;
+      --doacao-color: #db2777;
     }
 
     * {
@@ -353,6 +357,115 @@
       margin-top: 8px;
     }
 
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .month-select {
+      width: auto;
+      min-width: 170px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .month-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 520px) {
+      .month-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .month-coffer-box {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .month-coffer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .month-coffer-net {
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .month-coffer-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chart-box {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .chart-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chart-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .chart-mode-select {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
     .history-item {
       display: flex;
       justify-content: space-between;
@@ -424,7 +537,7 @@
   <div class="header">
     <div class="header-top">
       <div>
-        <div class="app-title">Os Meus 4 Cofres</div>
+        <div class="app-title">Cofre Mágico</div>
         <div class="app-sub">Aprender a construir o meu futuro e realizar sonhos</div>
       </div>
       <button type="button" class="btn-config" id="toggleConfigBtn">Definições</button>
@@ -544,6 +657,34 @@
   </div>
 
   <div class="card">
+    <span class="step-badge">Resumo por mês & evolução</span>
+    <div class="month-header">
+      <h2 style="margin-bottom: 0;">Valores por mês em cada cofre</h2>
+      <select id="monthSelect" class="month-select"></select>
+    </div>
+
+    <div class="month-summary-grid" id="monthCofferSummary"></div>
+
+    <div class="chart-box">
+      <div class="chart-title-row">
+        <div class="chart-title">Evolução mensal por cofre</div>
+        <select id="chartMetricSelect" class="chart-mode-select">
+          <option value="net">Saldo líquido do mês (€)</option>
+          <option value="in">Entradas no mês (€)</option>
+          <option value="out">Retiradas no mês (€)</option>
+        </select>
+      </div>
+      <div id="monthlyChartContainer"></div>
+      <div class="legend-row">
+        <span class="legend-item"><span class="legend-dot" style="background: var(--poupar-color);"></span>O Meu Futuro</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--sonhos-color);"></span>Sonhos</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--liberdade-color);"></span>Liberdade</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--doacao-color);"></span>Solidariedade</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <span class="step-badge">Passo 2 • Usar ou retirar dinheiro</span>
     <h2>Registar compra, objetivo ou solidariedade</h2>
 
@@ -581,6 +722,34 @@
 
   <script>
     const STORAGE_KEY = "os_meus_4_cofres_state_v1";
+    const COFFER_KEYS = ["poupar", "sonhos", "liberdade", "doacao"];
+
+    const COFFER_META = {
+      poupar: {
+        name: "O Meu Futuro",
+        short: "Futuro",
+        tagClass: "tag-poupar",
+        color: "#4f46e5"
+      },
+      sonhos: {
+        name: "Sonhos (Grande Brinquedo)",
+        short: "Sonhos",
+        tagClass: "tag-sonhos",
+        color: "#d97706"
+      },
+      liberdade: {
+        name: "Liberdade (Pequeno Brinquedo)",
+        short: "Liberdade",
+        tagClass: "tag-liberdade",
+        color: "#16a34a"
+      },
+      doacao: {
+        name: "Solidariedade",
+        short: "Solidariedade",
+        tagClass: "tag-doacao",
+        color: "#db2777"
+      }
+    };
 
     const DEFAULT_STATE = {
       mode: "mesada",
@@ -617,6 +786,7 @@
     }
 
     let state = loadState();
+    let selectedMonthKey = "";
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -629,10 +799,41 @@
       }) + " €";
     }
 
+    function getCurrentMonthKey(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      return `${year}-${month}`;
+    }
+
+    function parseMonthKeyFromItem(item) {
+      if (item.monthKey && /^\d{4}-\d{2}$/.test(item.monthKey)) {
+        return item.monthKey;
+      }
+      if (typeof item.date === "string") {
+        // Formato pt-PT habitual: "26/11/2026, 14:25"
+        const match = item.date.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+        if (match) {
+          return `${match[3]}-${match[2]}`;
+        }
+      }
+      return getCurrentMonthKey();
+    }
+
+    function formatMonthLabel(monthKey) {
+      const [yearStr, monthStr] = monthKey.split("-");
+      const year = parseInt(yearStr, 10);
+      const monthIndex = parseInt(monthStr, 10) - 1;
+      const dateObj = new Date(year, monthIndex, 1);
+      const rawLabel = dateObj.toLocaleDateString("pt-PT", {
+        month: "long",
+        year: "numeric"
+      });
+      return rawLabel.charAt(0).toUpperCase() + rawLabel.slice(1);
+    }
+
     function splitAmount(total, pcts) {
       const cents = Math.round(total * 100);
-      const keys = ["poupar", "sonhos", "liberdade", "doacao"];
-      const raw = keys.map((k) => ({
+      const raw = COFFER_KEYS.map((k) => ({
         key: k,
         exact: (cents * pcts[k]) / 100,
         floor: Math.floor((cents * pcts[k]) / 100)
@@ -656,19 +857,156 @@
       return result;
     }
 
-    const cofferNames = {
-      poupar: "O Meu Futuro",
-      sonhos: "Sonhos (Grande Brinquedo)",
-      liberdade: "Liberdade (Pequeno Brinquedo)",
-      doacao: "Solidariedade"
-    };
+    function buildMonthlyStats() {
+      const statsByMonth = {};
+      const currentKey = getCurrentMonthKey();
+      statsByMonth[currentKey] = createEmptyMonthEntry(currentKey);
+
+      state.history.forEach((item) => {
+        const mKey = parseMonthKeyFromItem(item);
+        if (!statsByMonth[mKey]) {
+          statsByMonth[mKey] = createEmptyMonthEntry(mKey);
+        }
+
+        if (item.parts) {
+          COFFER_KEYS.forEach((k) => {
+            const val = Number(item.parts[k] || 0);
+            statsByMonth[mKey].coffers[k].in = Number((statsByMonth[mKey].coffers[k].in + val).toFixed(2));
+            statsByMonth[mKey].coffers[k].net = Number((statsByMonth[mKey].coffers[k].net + val).toFixed(2));
+          });
+        } else if (item.coffer && COFFER_KEYS.includes(item.coffer)) {
+          const val = Math.abs(Number(item.delta || 0));
+          statsByMonth[mKey].coffers[item.coffer].out = Number((statsByMonth[mKey].coffers[item.coffer].out + val).toFixed(2));
+          statsByMonth[mKey].coffers[item.coffer].net = Number((statsByMonth[mKey].coffers[item.coffer].net - val).toFixed(2));
+        }
+      });
+
+      const orderedKeys = Object.keys(statsByMonth).sort();
+      return { statsByMonth, orderedKeys };
+    }
+
+    function createEmptyMonthEntry(monthKey) {
+      return {
+        monthKey,
+        coffers: {
+          poupar: { in: 0, out: 0, net: 0 },
+          sonhos: { in: 0, out: 0, net: 0 },
+          liberdade: { in: 0, out: 0, net: 0 },
+          doacao: { in: 0, out: 0, net: 0 }
+        }
+      };
+    }
+
+    function renderMonthlySection() {
+      const { statsByMonth, orderedKeys } = buildMonthlyStats();
+      const selectEl = document.getElementById("monthSelect");
+
+      if (!selectedMonthKey || !statsByMonth[selectedMonthKey]) {
+        selectedMonthKey = orderedKeys[orderedKeys.length - 1] || getCurrentMonthKey();
+      }
+
+      // Ordena do mês mais recente para o mais antigo no dropdown
+      const dropdownKeys = orderedKeys.slice().reverse();
+      selectEl.innerHTML = dropdownKeys
+        .map((mKey) => `<option value="${mKey}" ${mKey === selectedMonthKey ? "selected" : ""}>${formatMonthLabel(mKey)}</option>`)
+        .join("");
+
+      const activeMonth = statsByMonth[selectedMonthKey] || createEmptyMonthEntry(selectedMonthKey);
+      const summaryGrid = document.getElementById("monthCofferSummary");
+
+      summaryGrid.innerHTML = COFFER_KEYS.map((k) => {
+        const meta = COFFER_META[k];
+        const cStats = activeMonth.coffers[k];
+        const netClass = cStats.net > 0 ? "pos" : cStats.net < 0 ? "neg" : "";
+        return `
+          <div class="month-coffer-box">
+            <div class="month-coffer-top">
+              <span class="coffer-tag ${meta.tagClass}" style="margin-bottom: 0;">${meta.name}</span>
+              <span class="month-coffer-net ${netClass}">${cStats.net > 0 ? "+" : ""}${fmtEUR(cStats.net)}</span>
+            </div>
+            <div class="month-coffer-sub">
+              <span>Entrou: <strong>${fmtEUR(cStats.in)}</strong></span>
+              <span>Saiu: <strong>${fmtEUR(cStats.out)}</strong></span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      renderMonthlyChart(statsByMonth, orderedKeys);
+    }
+
+    function renderMonthlyChart(statsByMonth, orderedKeys) {
+      const container = document.getElementById("monthlyChartContainer");
+      const metric = document.getElementById("chartMetricSelect").value;
+
+      // Mostra até aos últimos 6 meses para manter boa leitura no telemóvel
+      const monthsToShow = orderedKeys.slice(-6);
+      if (!monthsToShow.length) {
+        container.innerHTML = `<div class="small-note">Ainda não existem dados mensais suficientes.</div>`;
+        return;
+      }
+
+      const values = [];
+      monthsToShow.forEach((mKey) => {
+        COFFER_KEYS.forEach((k) => {
+          values.push(statsByMonth[mKey].coffers[k][metric]);
+        });
+      });
+
+      const minVal = Math.min(0, ...values);
+      const maxVal = Math.max(5, ...values);
+      const range = maxVal - minVal || 1;
+
+      const width = 560;
+      const height = 190;
+      const padLeft = 42;
+      const padRight = 14;
+      const padTop = 14;
+      const padBottom = 28;
+      const plotW = width - padLeft - padRight;
+      const plotH = height - padTop - padBottom;
+
+      const yZero = padTop + ((maxVal - 0) / range) * plotH;
+      const groupW = plotW / monthsToShow.length;
+      const barGroupW = Math.min(groupW * 0.72, 76);
+      const singleBarW = barGroupW / COFFER_KEYS.length;
+
+      let svgBars = "";
+      let svgLabels = "";
+
+      monthsToShow.forEach((mKey, mIdx) => {
+        const groupCenterX = padLeft + groupW * mIdx + groupW / 2;
+        const groupStartX = groupCenterX - barGroupW / 2;
+
+        COFFER_KEYS.forEach((k, cIdx) => {
+          const val = statsByMonth[mKey].coffers[k][metric];
+          const yVal = padTop + ((maxVal - val) / range) * plotH;
+          const barY = Math.min(yVal, yZero);
+          const barH = Math.max(2, Math.abs(yVal - yZero));
+          const x = groupStartX + cIdx * singleBarW;
+
+          svgBars += `<rect x="${x.toFixed(1)}" y="${barY.toFixed(1)}" width="${Math.max(3, singleBarW - 2).toFixed(1)}" height="${barH.toFixed(1)}" rx="3" fill="${COFFER_META[k].color}"><title>${formatMonthLabel(mKey)} • ${COFFER_META[k].name}: ${fmtEUR(val)}</title></rect>`;
+        });
+
+        const shortMonth = formatMonthLabel(mKey).split(" ")[0].slice(0, 3);
+        svgLabels += `<text x="${groupCenterX.toFixed(1)}" y="${(height - 8).toFixed(1)}" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">${shortMonth}</text>`;
+      });
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" style="width: 100%; height: auto; display: block;">
+          <line x1="${padLeft}" y1="${padTop}" x2="${padLeft}" y2="${padTop + plotH}" stroke="#cbd5e1" stroke-width="1" />
+          <line x1="${padLeft}" y1="${yZero.toFixed(1)}" x2="${padLeft + plotW}" y2="${yZero.toFixed(1)}" stroke="#94a3b8" stroke-width="1.2" />
+          <text x="${padLeft - 6}" y="${(padTop + 9).toFixed(1)}" text-anchor="end" font-size="10" fill="#64748b">${Math.round(maxVal)}€</text>
+          <text x="${padLeft - 6}" y="${(yZero + 3).toFixed(1)}" text-anchor="end" font-size="10" fill="#64748b">0€</text>
+          ${minVal < 0 ? `<text x="${padLeft - 6}" y="${(padTop + plotH).toFixed(1)}" text-anchor="end" font-size="10" fill="#64748b">${Math.round(minVal)}€</text>` : ""}
+          ${svgBars}
+          ${svgLabels}
+        </svg>
+      `;
+    }
 
     function renderAll() {
-      const total =
-        state.balances.poupar +
-        state.balances.sonhos +
-        state.balances.liberdade +
-        state.balances.doacao;
+      const total = COFFER_KEYS.reduce((acc, k) => acc + Number(state.balances[k] || 0), 0);
 
       document.getElementById("totalBalance").textContent = fmtEUR(total);
       document.getElementById("activeModeLabel").textContent =
@@ -678,24 +1016,21 @@
         btn.classList.toggle("active", btn.dataset.type === state.mode);
       });
 
-      document.getElementById("bal-poupar").textContent = fmtEUR(state.balances.poupar);
-      document.getElementById("bal-sonhos").textContent = fmtEUR(state.balances.sonhos);
-      document.getElementById("bal-liberdade").textContent = fmtEUR(state.balances.liberdade);
-      document.getElementById("bal-doacao").textContent = fmtEUR(state.balances.doacao);
-
-      ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+      COFFER_KEYS.forEach((k) => {
+        document.getElementById(`bal-${k}`).textContent = fmtEUR(state.balances[k]);
         document.getElementById(`rule-${k}`).textContent =
           `Mesada: ${state.rules.mesada[k]}% • Presente: ${state.rules.presente[k]}%`;
       });
 
       syncConfigInputs();
       renderPreview();
+      renderMonthlySection();
       renderHistory();
     }
 
     function syncConfigInputs() {
       ["mesada", "presente"].forEach((mode) => {
-        ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+        COFFER_KEYS.forEach((k) => {
           document.getElementById(`${mode}_${k}`).value = state.rules[mode][k];
         });
       });
@@ -743,6 +1078,15 @@
         .join("");
     }
 
+    document.getElementById("monthSelect").addEventListener("change", (e) => {
+      selectedMonthKey = e.target.value;
+      renderMonthlySection();
+    });
+
+    document.getElementById("chartMetricSelect").addEventListener("change", () => {
+      renderMonthlySection();
+    });
+
     document.getElementById("historyList").addEventListener("click", (e) => {
       const btn = e.target.closest(".btn-del-item");
       if (!btn) return;
@@ -755,16 +1099,13 @@
         return;
       }
 
-      // Verifica se o movimento tem os dados dos cofres associados para poder reverter o saldo
       const hasDetails = item.parts || item.coffer;
       if (hasDetails && confirm("Queres também reverter este valor nos saldos dos cofres?")) {
         if (item.parts) {
-          // Era uma entrada: subtrai o que tinha sido distribuído
-          ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+          COFFER_KEYS.forEach((k) => {
             state.balances[k] = Math.max(0, Number((state.balances[k] - (item.parts[k] || 0)).toFixed(2)));
           });
         } else if (item.coffer) {
-          // Era uma saída: devolve o valor retirado ao cofre
           state.balances[item.coffer] = Number((state.balances[item.coffer] + Math.abs(item.delta)).toFixed(2));
         }
       }
@@ -806,11 +1147,12 @@
       }
 
       const parts = splitAmount(amount, state.rules[state.mode]);
-      ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+      COFFER_KEYS.forEach((k) => {
         state.balances[k] = Number((state.balances[k] + parts[k]).toFixed(2));
       });
 
-      const now = new Date().toLocaleString("pt-PT", {
+      const nowObj = new Date();
+      const now = nowObj.toLocaleString("pt-PT", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -818,9 +1160,13 @@
         minute: "2-digit"
       });
 
+      const monthKey = getCurrentMonthKey(nowObj);
+      selectedMonthKey = monthKey;
+
       state.history.unshift({
         title: `Entrada (${state.mode === "mesada" ? "Mesada" : "Presente"})`,
         date: now,
+        monthKey,
         delta: amount,
         parts: parts
       });
@@ -847,7 +1193,8 @@
       }
 
       state.balances[coffer] = Number((state.balances[coffer] - amount).toFixed(2));
-      const now = new Date().toLocaleString("pt-PT", {
+      const nowObj = new Date();
+      const now = nowObj.toLocaleString("pt-PT", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -855,9 +1202,14 @@
         minute: "2-digit"
       });
 
+      const monthKey = getCurrentMonthKey(nowObj);
+      selectedMonthKey = monthKey;
+      const cofferLabel = COFFER_META[coffer]?.name || coffer;
+
       state.history.unshift({
-        title: note ? `${cofferNames[coffer]}: ${note}` : `Saída (${cofferNames[coffer]})`,
+        title: note ? `${cofferLabel}: ${note}` : `Saída (${cofferLabel})`,
         date: now,
+        monthKey,
         delta: -amount,
         coffer: coffer
       });
@@ -879,7 +1231,7 @@
 
       for (const mode of ["mesada", "presente"]) {
         let sum = 0;
-        for (const k of ["poupar", "sonhos", "liberdade", "doacao"]) {
+        for (const k of COFFER_KEYS) {
           const val = parseInt(document.getElementById(`${mode}_${k}`).value, 10);
           if (!Number.isFinite(val) || val < 0) {
             statusEl.textContent = "Verifica os valores introduzidos.";
@@ -912,7 +1264,7 @@
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         const swCode = `
-          const CACHE_NAME = "quatro-cofres-v3";
+          const CACHE_NAME = "cofre-magico-v4";
           self.addEventListener("install", (e) => {
             e.waitUntil(
               caches.open(CACHE_NAME).then((cache) => cache.addAll(["./", "./index.html"]))
