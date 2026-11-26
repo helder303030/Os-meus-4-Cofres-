@@ -712,3 +712,151 @@
         renderPreview();
       });
     });
+
+    document.getElementById("clearAmountBtn").addEventListener("click", () => {
+      document.getElementById("amountInput").value = "";
+      renderPreview();
+    });
+
+    document.getElementById("distributeBtn").addEventListener("click", () => {
+      const amount = parseFloat(document.getElementById("amountInput").value);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Escreve primeiro um valor maior do que 0,00 €.");
+        return;
+      }
+
+      const parts = splitAmount(amount, state.rules[state.mode]);
+      ["poupar", "sonhos", "liberdade", "doacao"].forEach((k) => {
+        state.balances[k] = Number((state.balances[k] + parts[k]).toFixed(2));
+      });
+
+      const now = new Date().toLocaleString("pt-PT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      state.history.unshift({
+        title: `${state.mode === "mesada" ? "Mesada" : "Presente"} dividido pelos 4 cofres`,
+        date: now,
+        delta: amount
+      });
+
+      document.getElementById("amountInput").value = "";
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("spendBtn").addEventListener("click", () => {
+      const coffer = document.getElementById("spendCoffer").value;
+      const amount = parseFloat(document.getElementById("spendAmount").value);
+      const note = document.getElementById("spendNote").value.trim();
+      const statusEl = document.getElementById("spendStatus");
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+        statusEl.textContent = "Indica um valor válido para retirar.";
+        return;
+      }
+
+      if (amount > state.balances[coffer] + 0.0001) {
+        statusEl.textContent = `Saldo insuficiente no cofre ${cofferNames[coffer]} (${fmtEUR(state.balances[coffer])}).`;
+        return;
+      }
+
+      state.balances[coffer] = Number(Math.max(0, state.balances[coffer] - amount).toFixed(2));
+      const now = new Date().toLocaleString("pt-PT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      state.history.unshift({
+        title: note ? `${cofferNames[coffer]} — ${note}` : `Retirado de ${cofferNames[coffer]}`,
+        date: now,
+        delta: -amount
+      });
+
+      document.getElementById("spendAmount").value = "";
+      document.getElementById("spendNote").value = "";
+      statusEl.textContent = "Movimento registado.";
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("toggleConfigBtn").addEventListener("click", () => {
+      document.getElementById("configPanel").classList.toggle("open");
+    });
+
+    document.getElementById("saveRulesBtn").addEventListener("click", () => {
+      const statusEl = document.getElementById("rulesStatus");
+      const nextRules = { mesada: {}, presente: {} };
+
+      for (const mode of ["mesada", "presente"]) {
+        let sum = 0;
+        for (const k of ["poupar", "sonhos", "liberdade", "doacao"]) {
+          const val = parseInt(document.getElementById(`${mode}_${k}`).value, 10);
+          if (!Number.isFinite(val) || val < 0) {
+            statusEl.textContent = "Verifica os valores introduzidos.";
+            return;
+          }
+          nextRules[mode][k] = val;
+          sum += val;
+        }
+        if (sum !== 100) {
+          statusEl.textContent = `As percentagens de ${mode === "mesada" ? "Mesada" : "Presente"} somam ${sum}% (têm de somar 100%).`;
+          return;
+        }
+      }
+
+      state.rules = nextRules;
+      saveState();
+      renderAll();
+      statusEl.textContent = "Percentagens guardadas com sucesso.";
+    });
+
+    document.getElementById("resetAllBtn").addEventListener("click", () => {
+      if (!confirm("Tens a certeza de que queres repor todos os saldos e o histórico a zero?")) return;
+      const keepRules = state.rules;
+      state = structuredClone(DEFAULT_STATE);
+      state.rules = keepRules;
+      saveState();
+      renderAll();
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        const swCode = `
+          const CACHE_NAME = "quatro-cofres-v1";
+          self.addEventListener("install", (e) => {
+            e.waitUntil(
+              caches.open(CACHE_NAME).then((cache) => cache.addAll(["./", "./index.html", "./manifest.json", "./icon.svg"]))
+            );
+            self.skipWaiting();
+          });
+          self.addEventListener("fetch", (e) => {
+            if (e.request.method !== "GET") return;
+            e.respondWith(
+              fetch(e.request)
+                .then((res) => {
+                  const clone = res.clone();
+                  caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+                  return res;
+                })
+                .catch(() => caches.match(e.request))
+            );
+          });
+        `;
+        const blob = new Blob([swCode], { type: "application/javascript" });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(() => {});
+      });
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
